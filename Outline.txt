@@ -1,1 +1,62 @@
 Assignment: mytar
+Name: Matthew Lewis (mglewis)
+
+1. Logic of Project
+  1. Bundles files and directories together in a single file
+    a. 'f' option
+      i. Takes in a file
+      ii. It is acceptable to assume that the f option will be used
+      iii. This file is used for input or output
+    b. 'c'/'v' option
+      i. Opens a file for writing from 'f' option
+      ii. Trunc file to 0
+      iii. Following arguments are added to archive file
+        a. If an argument is a directory, add all the files in the
+        directory
+      iv. If the 'v' option is specified, each file is listed (1 per line)
+    c. 't' option
+      i. read contents of file
+      ii. print file names
+        a. If the 'v' option is specified, more options are provided
+        b. See tar.pdf for specific fields
+    d. 'x' option
+      i. If no files are given, extract all files
+      ii. Otherwise, extract specified files
+    e. 'S' option
+      i. Check:
+        a. to make sure the magic number is nul-terminated
+        b. for the version number
+2. Data Structures
+  1. A struct for files and expanded information
+  2. An array of struct from point 1
+    a. Done with malloc and memory
+  3. Alternatively, the array from point 2 can be replaced with a priority queue
+    a. This can be done with a heap
+3. Algorithms
+  1. Heap related algorithms
+    a. Push to heap
+    b. Heapify
+    c. Pop from heap
+4. Methods
+  1. Heap related methods
+    a. push()
+    b. heapify()
+    c. peek()
+    d. pop()
+  2. Archive functions
+    a. addFile()
+    b. addDir()
+    c. popFile()
+    d. popDir()
+    e. printArchive()
+5. Tests
+  1. Heap tests
+    a. testPushAndPop()
+    b. testHeapify()
+    c. testPeek()
+  2. Archive test
+    a. testAddFile()
+    b. testAddDir()
+    c. testPopFile()
+    d. testPopDir()
+    e. testPrintArchive()
