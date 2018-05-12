@@ -16,5 +16,18 @@ int main (int argc, char *argv[])
     printf("%d\n", temp.item[0]);
   }
 
+  if (argc > 1 && lookForChar(argv[1], 'f'))
+  {
+    if (lookForChar(argv[1], 'c'))
+    {
+      createArchive(isVerbose(argv[1]), isStrict(argv[1]), argv);
+    }
+    if (lookForChar(argv[1], 't'))
+    {
+      listArchiveTable(isVerbose(argv[1]), isStrict(argv[1]), argv);
+    }
+  }
+
+
   return 0;
 }
