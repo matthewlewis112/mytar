@@ -1,9 +1,9 @@
 #include "Project.h"
 
-void swap(Heap *one, Heap *two)
+void swap(Entry *one, Entry *two)
 {
-  Heap temp = *one;
-  *one = two;
+  Entry temp = *one;
+  *one = *two;
   *two = temp;
 }
 
@@ -38,12 +38,20 @@ Entry pop(Heap *h)
   Entry e;
   int i;
   e = *(h -> head);
-  for(i = 1; i < head -> size; i++)
+  for(i = 1; i < h -> size; i++)
   {
     swap(h-> head + i -1, h-> head + i);
   }
-  head -> size -= 1;
-  h -> head = realloc(h -> head, siezof(Entry) * head -> size);
-  heapify(h);
+  h -> size -= 1;
+  h -> head = realloc(h -> head, sizeof(Entry) * (h -> size));
+  heapify(*h);
   return e;
+}
+
+Heap newHeap()
+{
+  Heap h;
+  h.head = NULL;
+  h.size = 0;
+  return h;
 }
