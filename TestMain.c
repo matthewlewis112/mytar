@@ -20,11 +20,11 @@ int main (int argc, char *argv[])
   {
     if (lookForChar(argv[1], 'c'))
     {
-      createArchive(isVerbose(argv[1]), isStrict(argv[1]), argv);
+      createArchive(isVerbose(argv[1]), isStrict(argv[1]), argv, argc);
     }
     if (lookForChar(argv[1], 't'))
     {
-      listArchiveTable(isVerbose(argv[1]), isStrict(argv[1]), argv);
+      listArchiveTable(isVerbose(argv[1]), isStrict(argv[1]), argv, argc);
     }
   }
 
