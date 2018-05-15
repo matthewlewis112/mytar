@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -17,7 +18,9 @@ typedef struct Heap
   Entry *head;
 } Heap;
 
-enum bool {FALSE, TRUE};
+typedef int bool;
+
+enum {FALSE, TRUE};
 
 //Heap functions
 extern void swap(Entry *one, Entry *two);
@@ -42,6 +45,8 @@ extern int lookForChar(char *argv, char l);
 
 //Archive functions
 
-extern void createArchive(bool isVerbsoe, bool isStrict, char *argv);
+extern void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
-extern void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv);
+extern void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc);
+
+extern void writeToTarfile(char *inputfile, int tarfile);

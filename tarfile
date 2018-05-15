@@ -1,0 +1,159 @@
+int headerMode(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  sprintf(buffer, "%i", ifile.st_mode);
+  for (c = 0; c < 8; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerUID(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  sprintf(buffer, "%i", ifile.st_uid);
+  for (c = 0; c < 8; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerGID(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  sprintf(buffer, "%i", ifile.st_gid);
+  for (c = 0; c < 8; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerSize(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  sprintf(buffer, "%i", ifile.st_size);
+  for (c = 0; c < 12; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerMTime(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  sprintf(buffer, "%i", ifile.st_mtim);
+  for (c = 0; c < 12; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerTypeFlag(struct stat ifile, char *buffer)
+{
+  if (S_ISLNK(ifile.st_mode))
+  {
+    buffer[0] = '2';
+  }
+  else if (S_ISDIR(ifile.st_mode))
+  {
+    buffer[0] = '5';
+  }
+  else
+  {
+    buffer[0] = '\0';
+  }
+
+  return buffer[0];
+}
+
+int linkName(struct stat ifile, char *pathname, char *buffer)
+{
+  int c, temp, sum = 0;
+  char *restrict buffer;
+  temp = 0;
+
+  if (S_ISLNK(ifile.st_mode))
+  {
+    if (-1 == (temp = readlink(pathname, buffer, 100))){
+      perror("Link Name: Cannot read symbolic link");
+      exit(-1);
+    }
+  }
+
+  for (c = 0; c < 100; c++)
+  {
+    if (c >= temp)
+    {
+      buffer[c] = '\0';
+    }
+    sum += buffer[c];
+  }
+  return 0;
+}
+
+int headerUSTAR(char *buffer)
+{
+  int c, sum = 0;
+  strcpy(buffer, "ustar");
+  for (c = 0; c < 6; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerVersion(char *buffer)
+{
+  buffer[0] = '0';
+  buffer[1] = '0';
+  return 2 * '0';
+}
+
+int headerUName(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+
+  for (c = 0; c < 32; c++)
+  {
+    buffer[c] = 0;
+  }
+  return 0;
+}
+
+int headerGName(struct stat ifile, char *buffer)
+{
+  return 0;
+}
+
+int devMajor(struct stat ifile, char *buffer)
+{
+  return 0;
+}
+
+int devMinor(struct stat ifile, char *buffer)
+{
+  return 0;
+}
+
+int prefix(struct stat ifile, char *leftover, char *buffer)
+{
+  int c, sum = 0;
+
+  strcpy(buffer, leftover);
+
+  for (c = 0; c < 345; c++)
+  {
+    if (c >= strlen(leftover))
+    {
+      buffer[c] = '\0';
+    }
+    sum += buffer[c];
+  }
+
+  return sum;
+}

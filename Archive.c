@@ -2,7 +2,7 @@
 
 void addDirToArchive(int tarfile, char *dirname)
 {
-
+  return;
 }
 
 void addFileToArchive(int tarfile, char *inputfile)
@@ -18,17 +18,18 @@ void addFileToArchive(int tarfile, char *inputfile)
   if (S_ISDIR(ifile.st_mode))
   {
     addDirToArchive(tarfile, inputfile);
-    return;
   }
-
-  
+  else if (S_ISREG(ifile.st_mode))
+  {
+    writeToTarfile(inputfile, tarfile);
+  }
 }
 
 void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 {
-  int i, tarfile, inputfile;
+  int i, tarfile;
 
-  if (-1 == (tarfile = open(argv[2], O_WRONLY | O_TRUNC)))
+  if (-1 == (tarfile = open(argv[2], O_WRONLY | O_TRUNC | O_CREAT)))
   {
     perror("Cannot open file");
     exit(-1);
@@ -48,6 +49,7 @@ void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 
 void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 {
+  /*
   char *tarfilename = argv[2];
   int i, tarfile;
 
@@ -61,5 +63,6 @@ void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc)
   {
     perror("Cannot close file");
     exit(-1);
-  }
+  }*/
+  return;
 }
