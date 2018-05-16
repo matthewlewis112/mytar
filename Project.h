@@ -49,4 +49,12 @@ extern void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 
 extern void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
+extern int headerName(char *inputfile, char *buffer);
+
+extern int headerMode(struct stat ifile, char *buffer);
+
+extern int headerUID(struct stat ifile, char *buffer);
+
+extern int headerGID(struct stat ifile, char *buffer);
+
 extern void writeToTarfile(char *inputfile, int tarfile);
