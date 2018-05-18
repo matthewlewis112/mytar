@@ -54,6 +54,10 @@ extern void addFileToArchive(int tarfile, char *inputfile);
 
 extern void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
+extern void unpackArchive(bool isVerbose, bool isStrict, char *argv[], int argc);
+
+extern void unpack(int tarfile);
+
 extern int headerName(char *inputfile, char *buffer, char *leftover);
 
 extern int headerMode(struct stat ifile, char *buffer);

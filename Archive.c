@@ -53,7 +53,6 @@ void addFileToArchive(int tarfile, char *inputfile)
   sum += headerMTime(ifile, mtimeBuffer);
   sum += headerTypeFlag(ifile, flagBuffer);
   sum += headerLinkName(ifile, inputfile, linkName);
-  printf("%s\n", inputfile);
   sum += headerUname(ifile, unameBuffer);
   sum += headerGname(ifile, gnameBuffer);
   sum += headerDevmajor(ifile, majorBuffer);
@@ -177,7 +176,7 @@ void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 
   if (-1 == (tarfile = open(argv[2], O_WRONLY | O_TRUNC | O_CREAT)))
   {
-    perror("Cannot open file");
+    perror("Cannot open tarfile");
     exit(-1);
   }
 
@@ -205,6 +204,27 @@ void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc)
   }
 
   printTable(tarfile);
+
+  if (-1 == close(tarfile))
+  {
+    perror("Cannot close tarfile");
+    exit(-1);
+  }
+  return;
+}
+
+void unpackArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
+{
+  char *tarfilename = argv[2];
+  int tarfile;
+
+  if (-1 == (tarfile = open(tarfilename, O_RDONLY)))
+  {
+    perror("Cannot open tarfile");
+    exit(-1);
+  }
+
+  unpack(tarfile);
 
   if (-1 == close(tarfile))
   {

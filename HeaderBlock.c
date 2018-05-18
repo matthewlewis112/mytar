@@ -409,3 +409,54 @@ void printTable(int tarfile)
     }
   }
 }
+
+void unpack(int tarfile)
+{
+  char header[512], name[100];
+  char *temp;
+  mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+  int i, size, fileDes,
+    argsO;
+
+  while (read(tarfile, header, 512) > 0)
+  {
+    for (i = 0; i < 100; i++)
+    {
+      name[i] = header[i];
+    }
+    if (header[156] == '\0')
+    {
+      argsO = O_WRONLY | O_TRUNC | O_CREAT;
+      if (-1 == (fileDes = open(name, argsO, mode)))
+      {
+        printf("%s\n", name);
+        perror("Cannot write new file");
+        exit(-1);
+      }
+      size = 0;
+      for (i = 124; i < 136; i++)
+      {
+        if (header[i] != '\0')
+          size = size * 10 + (header[i] - 48);
+      }
+      temp = malloc(sizeof(char) * size);
+      if (-1 == read(tarfile, temp, size))
+      {
+        printf("%i\n", size);
+        perror("Cannot read tarfile");
+        exit(-1);
+      }
+      if (-1 == write(fileDes, temp, size))
+      {
+        perror("Cannot write file");
+        exit(-1);
+      }
+      free(temp);
+      if (-1 == (close(fileDes)))
+      {
+        perror("Cannot close file");
+        exit(-1);
+      }
+    }
+  }
+}
