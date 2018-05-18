@@ -1,8 +1,10 @@
 #include "Project.h"
 
-int headerName(char *inputfile, char *buffer)
+int headerName(char *inputfile, char *buffer, char *leftover)
 {
   int c, sum = 0;
+
+  memset(leftover, '\0', 155);
 
   for (c = 0; c < 100; c++)
   {
@@ -16,6 +18,12 @@ int headerName(char *inputfile, char *buffer)
       buffer[c] = '\0';
       sum += '\0';
     }
+  }
+  for (; (c < 255); c++)
+  {
+    if (c < strlen(inputfile))
+      leftover[c-100] = inputfile[c];
+    sum += leftover[c-100];
   }
   return sum;
 }
@@ -120,6 +128,216 @@ int headerGID(struct stat ifile, char *buffer)
   {
     k *= 10;
   }
+  for (c = 0; c < 8; c++)
+  {
+    if (k > 0)
+    {
+      buffer[c] = temp / k;
+      temp -= buffer[c] * k;
+      buffer[c] += 48;
+      k /= 10;
+    }
+    else
+      buffer[c] = '\0';
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerSize(struct stat ifile, char *buffer)
+{
+  int c, sum = 0, k = 1, temp = ifile.st_size;
+
+  for (c = 0; c < (sizeof(off_t) -1); c++)
+  {
+    k *= 10;
+  }
+  for (c = 0; c < 12; c++)
+  {
+    if (k > 0)
+    {
+      buffer[c] = temp / k;
+      temp -= buffer[c] * k;
+      buffer[c] += 48;
+      k /= 10;
+    }
+    else
+      buffer[c] = '\0';
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerMTime(struct stat ifile, char *buffer)
+{
+  int c, sum = 0, k = 1,
+    tempSec = ifile.st_mtim.tv_sec;
+
+  for (c = 0; c < 12; c++)
+  {
+    if (tempSec/10 > k)
+      k *= 10;
+  }
+  for (c = 0; c < 12; c++)
+  {
+    if (k > 0)
+    {
+      buffer[c] = tempSec / k;
+      tempSec -= buffer[c] * k;
+      buffer[c] += 48;
+      k /= 10;
+    }
+    else
+      buffer[c] = '\0';
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerChkSum(int chksum, char *buffer)
+{
+  int c, sum = 0, k = 1;
+
+  memset(buffer, ' ', 8);
+
+  for (c = 0; c < 8; c++)
+  {
+    if (chksum/10 > k)
+      k *= 10;
+  }
+  for (c = 0; c < 8; c++)
+  {
+    if (k > 0)
+    {
+      buffer[c] = chksum / k;
+      chksum -= buffer[c] * k;
+      buffer[c] += 48;
+      k /= 10;
+    }
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerTypeFlag(struct stat ifile, char *buffer)
+{
+  if (S_ISDIR(ifile.st_mode))
+  {
+    *buffer = '5';
+  }
+  else if (S_ISLNK(ifile.st_mode))
+  {
+    *buffer = '2';
+  }
+  else
+  {
+    *buffer = '\0';
+  }
+  return *buffer;
+}
+
+int headerLinkName(struct stat ifile, char *pathname, char *buffer)
+{
+  int c, sum = 0;
+
+  memset(buffer, '\0', sizeof(char)*100);
+
+  if (S_ISLNK(ifile.st_mode))
+  {
+    if (-1 != (readlink(pathname, buffer, 100)))
+    {
+      perror("Cannot read symbolic link");
+      exit(-1);
+    }
+  }
+  for (c = 0; c < 100; c++)
+  {
+    sum += buffer[c];
+  }
+  return sum;
+}
+
+int headerUname(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  struct passwd *user;
+
+  if (0 == (user = getpwuid(ifile.st_uid)))
+  {
+    perror("Cannot get user name");
+    exit(-1);
+  }
+
+  for (c = 0; c < 32; c++)
+  {
+    buffer[c] = user -> pw_name[c];
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerGname(struct stat ifile, char *buffer)
+{
+  int c, sum = 0;
+  struct group *group;
+
+  if (0 == (group = getgrgid(ifile.st_gid)))
+  {
+    perror("Cannot get group name");
+    exit(-1);
+  }
+
+  for (c = 0; c < 32; c++)
+  {
+    buffer[c] = group -> gr_name[c];
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerDevmajor(struct stat ifile, char *buffer)
+{
+  int c, sum = 0, temp = major(ifile.st_dev), k = 1;
+
+  for (c = 0; c < 8; c++)
+  {
+    if (temp/10 > k)
+      k *= 10;
+  }
+
+  for (c = 0; c < 8; c++)
+  {
+    if (k > 0)
+    {
+      buffer[c] = temp / k;
+      temp -= buffer[c] * k;
+      buffer[c] += 48;
+      k /= 10;
+    }
+    else
+      buffer[c] = '\0';
+    sum += buffer[c];
+  }
+
+  return sum;
+}
+
+int headerDevminor(struct stat ifile, char *buffer)
+{
+  int c, sum = 0, temp = minor(ifile.st_dev), k = 1;
+
+  for (c = 0; c < 8; c++)
+  {
+    if (temp/10 > k)
+      k *= 10;
+  }
+
   for (c = 0; c < 8; c++)
   {
     if (k > 0)

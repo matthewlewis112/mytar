@@ -1,9 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <pwd.h>
+#include <grp.h>
 #include <sys/types.h>
 
 typedef struct Entry
@@ -47,14 +50,34 @@ extern int lookForChar(char *argv, char l);
 
 extern void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
+extern void addFileToArchive(int tarfile, char *inputfile);
+
 extern void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
-extern int headerName(char *inputfile, char *buffer);
+extern int headerName(char *inputfile, char *buffer, char *leftover);
 
 extern int headerMode(struct stat ifile, char *buffer);
 
 extern int headerUID(struct stat ifile, char *buffer);
 
 extern int headerGID(struct stat ifile, char *buffer);
+
+extern int headerSize(struct stat ifile, char *buffer);
+
+extern int headerMTime(struct stat ifile, char *buffer);
+
+extern int headerChkSum(int chksum, char* buffer);
+
+extern int headerTypeFlag(struct stat ifile, char *buffer);
+
+extern int headerLinkName(struct stat ifile, char *pathname, char *buffer);
+
+extern int headerUname(struct stat ifile, char *buffer);
+
+extern int headerGname(struct stat ifile, char *buffer);
+
+extern int headerDevmajor(struct stat ifile, char *buffer);
+
+extern int headerDevminor(struct stat ifile, char *buffer);
 
 extern void writeToTarfile(char *inputfile, int tarfile);
