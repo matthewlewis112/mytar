@@ -168,11 +168,9 @@ void addFileToArchive(int tarfile, char *inputfile)
   {
     writeToTarfile(inputfile, tarfile);
   }
-  if (isVerbose)
-    printf("%s\n", inputfile);
 }
 
-void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
+void createArchive(bool isV, bool isStrict, char *argv[], int argc)
 {
   int i, tarfile;
 
@@ -185,6 +183,7 @@ void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
   for (i = 3; i < argc; i++)
   {
     addFileToArchive(tarfile, argv[i]);
+    printf("%s\n", argv[i]);
   }
 
   if (-1 == close(tarfile))
