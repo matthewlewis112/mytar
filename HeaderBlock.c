@@ -391,8 +391,9 @@ void printTable(int tarfile)
   char header[512];
   int i, size;
 
-  while (read(tarfile, header, 512) > -1)
+  while (read(tarfile, header, 512) > 0)
   {
+    size = 0;
     if (-1 == write(1, header, 100))
     {
       perror("Cannot write file name");
