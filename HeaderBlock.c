@@ -391,7 +391,7 @@ void printTable(int tarfile)
   char header[512];
   int i, size;
 
-  while (read(tarfile, header, 512) > 0)
+  while (read(tarfile, header, 512) != -1s)
   {
     if (-1 == write(1, header, 100))
     {
