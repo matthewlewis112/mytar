@@ -1,6 +1,6 @@
 #include "Project.h"
 
-void addDirToArchive(int tarfile, char *dirname)
+void addDirToArchive(int tarfile, char *dirname, bool isV)
 {
   DIR *dir;
   struct dirent *file;
@@ -12,7 +12,7 @@ void addDirToArchive(int tarfile, char *dirname)
     {
       if ((strcmp(file -> d_name, "..") != 0)&&
         (strcmp(file -> d_name, ".") != 0))
-      addFileToArchive(tarfile, file -> d_name);
+      addFileToArchive(tarfile, file -> d_name, isV);
     }
     closedir(dir);
     chdir("..");
