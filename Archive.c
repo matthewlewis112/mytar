@@ -168,6 +168,8 @@ void addFileToArchive(int tarfile, char *inputfile)
   {
     writeToTarfile(inputfile, tarfile);
   }
+  if (isVerbose)
+    printf("%s\n", inputfile);
 }
 
 void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
