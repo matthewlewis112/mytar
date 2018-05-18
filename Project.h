@@ -81,3 +81,5 @@ extern int headerDevmajor(struct stat ifile, char *buffer);
 extern int headerDevminor(struct stat ifile, char *buffer);
 
 extern void writeToTarfile(char *inputfile, int tarfile);
+
+extern void printTable(int tarfile);

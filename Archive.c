@@ -196,17 +196,19 @@ void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc)
 {
   char *tarfilename = argv[2];
-  int i, tarfile;
+  int tarfile;
 
-  if (-1 == (tarfile = open(argv[i], O_RDONLY)))
+  if (-1 == (tarfile = open(tarfilename, O_RDONLY)))
   {
-    perror("Cannot open file");
+    perror("Cannot open tarfile");
     exit(-1);
   }
 
+  printTable(tarfile);
+
   if (-1 == close(tarfile))
   {
-    perror("Cannot close file");
+    perror("Cannot close tarfile");
     exit(-1);
   }
   return;

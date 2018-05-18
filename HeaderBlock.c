@@ -385,3 +385,27 @@ void writeToTarfile(char *inputfile, int tarfile)
     exit(-1);
   }
 }
+
+void printTable(int tarfile)
+{
+  char header[512];
+  int i, size;
+
+  while (read(tarfile, header, 512) > 0)
+  {
+    if (-1 == write(1, header, 100))
+    {
+      perror("Cannot write file name");
+    }
+    putchar('\n');
+    if (header[156] == '\0')
+    {
+      for (i = 124; i < 136; i++)
+      {
+        if (header[i] != '\0')
+          size = size * 10 + (header[i] - 48);
+      }
+      lseek(tarfile, size, SEEK_CUR);
+    }
+  }
+}
