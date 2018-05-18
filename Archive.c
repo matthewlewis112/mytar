@@ -24,7 +24,7 @@ void addDirToArchive(int tarfile, char *dirname)
   }
 }
 
-void addFileToArchive(int tarfile, char *inputfile)
+void addFileToArchive(int tarfile, char *inputfile, bool isV)
 {
   struct stat ifile;
   char nameBuffer[100], modeBuffer[8],
@@ -153,6 +153,8 @@ void addFileToArchive(int tarfile, char *inputfile)
         j = 0;
       headerBuffer[c] = prefixBuffer[j];
     }
+    if (isV)
+      printf("%s\n", inputfile);
   }
 
   if (-1 == write(tarfile, headerBuffer, 512))
@@ -182,8 +184,7 @@ void createArchive(bool isV, bool isStrict, char *argv[], int argc)
 
   for (i = 3; i < argc; i++)
   {
-    addFileToArchive(tarfile, argv[i]);
-    printf("%s\n", argv[i]);
+    addFileToArchive(tarfile, argv[i], isV);
   }
 
   if (-1 == close(tarfile))

@@ -50,7 +50,7 @@ extern int lookForChar(char *argv, char l);
 
 extern void createArchive(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
-extern void addFileToArchive(int tarfile, char *inputfile);
+extern void addFileToArchive(int tarfile, char *inputfile, bool isV);
 
 extern void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc);
 
