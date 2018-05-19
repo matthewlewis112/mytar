@@ -153,9 +153,10 @@ void addFileToArchive(int tarfile, char *inputfile, bool isV)
         j = 0;
       headerBuffer[c] = prefixBuffer[j];
     }
-    if (isV)
-      printf("%s\n", inputfile);
   }
+
+  if (isV)
+    printf("%s\n", inputfile);
 
   if (-1 == write(tarfile, headerBuffer, 512))
   {
@@ -164,7 +165,7 @@ void addFileToArchive(int tarfile, char *inputfile, bool isV)
 
   if (S_ISDIR(ifile.st_mode))
   {
-    addDirToArchive(tarfile, inputfile);
+    addDirToArchive(tarfile, inputfile, isV);
   }
   else if (S_ISREG(ifile.st_mode))
   {
