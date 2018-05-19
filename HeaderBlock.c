@@ -386,19 +386,76 @@ void writeToTarfile(char *inputfile, int tarfile)
   }
 }
 
-void printTable(int tarfile)
+
+void setPermissions(int mode, char *permissions)
 {
-  char header[512];
-  int i, size;
+  if (S_ISUID & mode)
+  {
+    permissions[1] = '4';
+  }
+  if (S_ISGID & mode)
+  {
+    permissions[2] = '2';
+  }
+  else if (S_ISVTX & mode)
+  {
+    permissions[3] = '1';
+  }
+
+  if (S_IRUSR & mode)
+  {
+    permissions[4] = '4';
+  }
+  if (S_IWUSR & mode)
+  {
+    permissions[5] = '2';
+  }
+  if (S_IXUSR & mode)
+  {
+    permissions[6] = '1';
+  }
+
+  if (S_IRGRP & mode)
+  {
+    permissions[7] = '4';
+  }
+  if (S_IWGRP & mode)
+  {
+    permissions[8] = '2';
+  }
+  if (S_IXGRP & mode)
+  {
+    permissions[9] = '1';
+  }
+
+  if (S_IROTH & mode)
+  {
+    permissions[4] = '4';
+  }
+  if (S_IWOTH & mode)
+  {
+    permissions[4] = '2';
+  }
+  if (S_IXOTH & mode)
+  {
+    permissions[4] = '1';
+  }
+}
+void printTable(int tarfile, bool isVerbose)
+{
+  char header[512], name[100], owner[32], group[32], permissions[10];
+  int i, size, mode;
 
   while (read(tarfile, header, 512) > 0)
   {
+    memset(name, '\0', 100);
+    memset(permissions, '-', 10);
     size = 0;
-    if (-1 == write(1, header, 100))
+    mode = 0;
+    for (i = 0; i < 100; i++)
     {
-      perror("Cannot write file name");
+      name[i] = header[i];
     }
-    putchar('\n');
     if (header[156] == '\0')
     {
       for (i = 124; i < 136; i++)
@@ -407,6 +464,31 @@ void printTable(int tarfile)
           size = size * 10 + (header[i] - 48);
       }
       lseek(tarfile, size, SEEK_CUR);
+    }
+    if (isVerbose)
+    {
+      for (i = 100; i < 108, i++)
+      {
+        if (header[i] != '\0')
+          mode = mode * 10 + (header[i] - 48);
+      }
+      for (i = 265; i < 297; i++)
+      {
+        owner[i-265] = header[i];
+      }
+      for (i = 297; i < 329; i++)
+      {
+        group[i-297] = header[i];
+      }
+      if (header[156] = '5')
+        permissions[0] = 'd';
+      setPermissions(mode, permissions);
+
+      printf("%s %s/%s %10s %s %s\n", permissions, owner, group, strSize, strTime, name);
+    }
+    else
+    {
+      printf("%s\n", argv[i]);
     }
   }
 }

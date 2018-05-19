@@ -205,7 +205,7 @@ void listArchiveTable(bool isVerbsoe, bool isStrict, char *argv[], int argc)
     exit(-1);
   }
 
-  printTable(tarfile);
+  printTable(tarfile, isVerbose);
 
   if (-1 == close(tarfile))
   {

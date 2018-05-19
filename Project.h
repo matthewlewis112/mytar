@@ -86,4 +86,4 @@ extern int headerDevminor(struct stat ifile, char *buffer);
 
 extern void writeToTarfile(char *inputfile, int tarfile);
 
-extern void printTable(int tarfile);
+extern void printTable(int tarfile, bool isVerbose);
